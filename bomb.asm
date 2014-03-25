@@ -620,10 +620,10 @@ Disassembly of section .text:
  8048e19:	55                   	push   %ebp
  8048e1a:	89 e5                	mov    %esp,%ebp
  8048e1c:	83 ec 38             	sub    $0x38,%esp
- 8048e1f:	8d 45 f0             	lea    -0x10(%ebp),%eax
- 8048e22:	89 44 24 10          	mov    %eax,0x10(%esp)
- 8048e26:	8d 45 ef             	lea    -0x11(%ebp),%eax
- 8048e29:	89 44 24 0c          	mov    %eax,0xc(%esp)
+ 8048e1f:	8d 45 f0             	lea    -0x10(%ebp),%eax		; Ok I see what's going on. It
+ 8048e22:	89 44 24 10          	mov    %eax,0x10(%esp)		; reads the line and then does a char swap
+ 8048e26:	8d 45 ef             	lea    -0x11(%ebp),%eax		; and then it gives it to scanf to read it into
+ 8048e29:	89 44 24 0c          	mov    %eax,0xc(%esp)		; integer variables
  8048e2d:	8d 45 f4             	lea    -0xc(%ebp),%eax
  8048e30:	89 44 24 08          	mov    %eax,0x8(%esp)
  8048e34:	c7 44 24 04 b2 99 04 	movl   $0x80499b2,0x4(%esp)
