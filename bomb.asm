@@ -368,7 +368,7 @@ Disassembly of section .text:
  8048b67:	7e 1a                	jle    8048b83 <func4+0x33>
  8048b69:	8d 43 ff             	lea    -0x1(%ebx),%eax
  8048b6c:	89 04 24             	mov    %eax,(%esp)
- 8048b6f:	e8 dc ff ff ff       	call   8048b50 <func4>
+ 8048b6f:	e8 dc ff ff ff       	call   8048b50 <func4>		;ah a recursive f()
  8048b74:	89 c6                	mov    %eax,%esi
  8048b76:	83 eb 02             	sub    $0x2,%ebx
  8048b79:	89 1c 24             	mov    %ebx,(%esp)
@@ -534,7 +534,7 @@ Disassembly of section .text:
  8048d32:	e8 21 06 00 00       	call   8049358 <read_six_numbers>
  8048d37:	8d 5d e4             	lea    -0x1c(%ebp),%ebx
  8048d3a:	8d 75 f8             	lea    -0x8(%ebp),%esi
- 8048d3d:	8b 43 fc             	mov    -0x4(%ebx),%eax
+ 8048d3d:	8b 43 fc             	mov    -0x4(%ebx),%eax			'beginning of loop
  8048d40:	83 c0 05             	add    $0x5,%eax
  8048d43:	39 03                	cmp    %eax,(%ebx)
  8048d45:	74 05                	je     8048d4c <phase_2+0x2f>
@@ -594,17 +594,17 @@ Disassembly of section .text:
 08048dd0 <phase_4>:
  8048dd0:	55                   	push   %ebp
  8048dd1:	89 e5                	mov    %esp,%ebp
- 8048dd3:	83 ec 28             	sub    $0x28,%esp
- 8048dd6:	8d 45 f4             	lea    -0xc(%ebp),%eax
+ 8048dd3:	83 ec 28             	sub    $0x28,%esp				;ok max char length = 28
+ 8048dd6:	8d 45 f4             	lea    -0xc(%ebp),%eax			;there is some string movement
  8048dd9:	89 44 24 08          	mov    %eax,0x8(%esp)
- 8048ddd:	c7 44 24 04 b8 99 04 	movl   $0x80499b8,0x4(%esp)
+ 8048ddd:	c7 44 24 04 b8 99 04 	movl   $0x80499b8,0x4(%esp)		;some string replacing
  8048de4:	08 
  8048de5:	8b 45 08             	mov    0x8(%ebp),%eax
  8048de8:	89 04 24             	mov    %eax,(%esp)
  8048deb:	e8 98 f9 ff ff       	call   8048788 <__isoc99_sscanf@plt>
  8048df0:	83 f8 01             	cmp    $0x1,%eax
- 8048df3:	75 06                	jne    8048dfb <phase_4+0x2b>
- 8048df5:	83 7d f4 00          	cmpl   $0x0,-0xc(%ebp)
+ 8048df3:	75 06                	jne    8048dfb <phase_4+0x2b>		;so it only wants 1 argument from sscanf
+ 8048df5:	83 7d f4 00          	cmpl   $0x0,-0xc(%ebp)				;and its got to be 0
  8048df9:	7f 05                	jg     8048e00 <phase_4+0x30>
  8048dfb:	e8 16 05 00 00       	call   8049316 <explode_bomb>
  8048e00:	8b 45 f4             	mov    -0xc(%ebp),%eax
@@ -620,10 +620,10 @@ Disassembly of section .text:
  8048e19:	55                   	push   %ebp
  8048e1a:	89 e5                	mov    %esp,%ebp
  8048e1c:	83 ec 38             	sub    $0x38,%esp
- 8048e1f:	8d 45 f0             	lea    -0x10(%ebp),%eax
- 8048e22:	89 44 24 10          	mov    %eax,0x10(%esp)
- 8048e26:	8d 45 ef             	lea    -0x11(%ebp),%eax
- 8048e29:	89 44 24 0c          	mov    %eax,0xc(%esp)
+ 8048e1f:	8d 45 f0             	lea    -0x10(%ebp),%eax		; Ok I see what's going on. It
+ 8048e22:	89 44 24 10          	mov    %eax,0x10(%esp)		; reads the line and then does a char swap
+ 8048e26:	8d 45 ef             	lea    -0x11(%ebp),%eax		; and then it gives it to scanf to read it into
+ 8048e29:	89 44 24 0c          	mov    %eax,0xc(%esp)		; integer variables
  8048e2d:	8d 45 f4             	lea    -0xc(%ebp),%eax
  8048e30:	89 44 24 08          	mov    %eax,0x8(%esp)
  8048e34:	c7 44 24 04 b2 99 04 	movl   $0x80499b2,0x4(%esp)
@@ -637,58 +637,58 @@ Disassembly of section .text:
  8048e51:	83 7d f4 07          	cmpl   $0x7,-0xc(%ebp)
  8048e55:	0f 87 e2 00 00 00    	ja     8048f3d <phase_3+0x124>
  8048e5b:	8b 45 f4             	mov    -0xc(%ebp),%eax
- 8048e5e:	ff 24 85 c0 99 04 08 	jmp    *0x80499c0(,%eax,4)
- 8048e65:	b8 61 00 00 00       	mov    $0x61,%eax
+ 8048e5e:	ff 24 85 c0 99 04 08 	jmp    *0x80499c0(,%eax,4)   ;eax = 1st number entered by user. ohhhh. this is a switch statement!
+ 8048e65:	b8 61 00 00 00       	mov    $0x61,%eax			;case 1st number 0 or 0.5
  8048e6a:	81 7d f0 6e 03 00 00 	cmpl   $0x36e,-0x10(%ebp)
  8048e71:	0f 84 d7 00 00 00    	je     8048f4e <phase_3+0x135>
  8048e77:	e8 9a 04 00 00       	call   8049316 <explode_bomb>
  8048e7c:	b8 61 00 00 00       	mov    $0x61,%eax
  8048e81:	e9 c8 00 00 00       	jmp    8048f4e <phase_3+0x135>
- 8048e86:	b8 72 00 00 00       	mov    $0x72,%eax
+ 8048e86:	b8 72 00 00 00       	mov    $0x72,%eax			;case 1st number 1
  8048e8b:	81 7d f0 8c 00 00 00 	cmpl   $0x8c,-0x10(%ebp)
  8048e92:	0f 84 b6 00 00 00    	je     8048f4e <phase_3+0x135>
  8048e98:	e8 79 04 00 00       	call   8049316 <explode_bomb>
  8048e9d:	b8 72 00 00 00       	mov    $0x72,%eax
  8048ea2:	e9 a7 00 00 00       	jmp    8048f4e <phase_3+0x135>
- 8048ea7:	b8 6c 00 00 00       	mov    $0x6c,%eax
+ 8048ea7:	b8 6c 00 00 00       	mov    $0x6c,%eax				;case 2
  8048eac:	81 7d f0 6e 01 00 00 	cmpl   $0x16e,-0x10(%ebp)
- 8048eb3:	0f 84 95 00 00 00    	je     8048f4e <phase_3+0x135>
+ 8048eb3:	0f 84 95 00 00 00    	je     8048f4e <phase_3+0x135> ;stops here.
  8048eb9:	e8 58 04 00 00       	call   8049316 <explode_bomb>
  8048ebe:	b8 6c 00 00 00       	mov    $0x6c,%eax
  8048ec3:	e9 86 00 00 00       	jmp    8048f4e <phase_3+0x135>
- 8048ec8:	b8 74 00 00 00       	mov    $0x74,%eax
+ 8048ec8:	b8 74 00 00 00       	mov    $0x74,%eax				; case 3
  8048ecd:	81 7d f0 d8 01 00 00 	cmpl   $0x1d8,-0x10(%ebp)
  8048ed4:	74 78                	je     8048f4e <phase_3+0x135>
  8048ed6:	e8 3b 04 00 00       	call   8049316 <explode_bomb>
  8048edb:	b8 74 00 00 00       	mov    $0x74,%eax
  8048ee0:	eb 6c                	jmp    8048f4e <phase_3+0x135>
- 8048ee2:	81 7d f0 2b 01 00 00 	cmpl   $0x12b,-0x10(%ebp)
+ 8048ee2:	81 7d f0 2b 01 00 00 	cmpl   $0x12b,-0x10(%ebp)		; case 4
  8048ee9:	74 5e                	je     8048f49 <phase_3+0x130>
  8048eeb:	e8 26 04 00 00       	call   8049316 <explode_bomb>
  8048ef0:	b8 77 00 00 00       	mov    $0x77,%eax
  8048ef5:	eb 57                	jmp    8048f4e <phase_3+0x135>
- 8048ef7:	b8 70 00 00 00       	mov    $0x70,%eax
+ 8048ef7:	b8 70 00 00 00       	mov    $0x70,%eax				; case 5
  8048efc:	81 7d f0 92 01 00 00 	cmpl   $0x192,-0x10(%ebp)
  8048f03:	74 49                	je     8048f4e <phase_3+0x135>
  8048f05:	e8 0c 04 00 00       	call   8049316 <explode_bomb>
  8048f0a:	b8 70 00 00 00       	mov    $0x70,%eax
  8048f0f:	eb 3d                	jmp    8048f4e <phase_3+0x135>
- 8048f11:	b8 6a 00 00 00       	mov    $0x6a,%eax
+ 8048f11:	b8 6a 00 00 00       	mov    $0x6a,%eax				; case 6 probs
  8048f16:	81 7d f0 93 02 00 00 	cmpl   $0x293,-0x10(%ebp)
  8048f1d:	74 2f                	je     8048f4e <phase_3+0x135>
  8048f1f:	e8 f2 03 00 00       	call   8049316 <explode_bomb>
  8048f24:	b8 6a 00 00 00       	mov    $0x6a,%eax
  8048f29:	eb 23                	jmp    8048f4e <phase_3+0x135>
- 8048f2b:	83 7d f0 62          	cmpl   $0x62,-0x10(%ebp)
+ 8048f2b:	83 7d f0 62          	cmpl   $0x62,-0x10(%ebp)		; case 7
  8048f2f:	74 18                	je     8048f49 <phase_3+0x130>
  8048f31:	e8 e0 03 00 00       	call   8049316 <explode_bomb>
- 8048f36:	b8 77 00 00 00       	mov    $0x77,%eax
+ 8048f36:	b8 77 00 00 00       	mov    $0x77,%eax				; case 8? huh?
  8048f3b:	eb 11                	jmp    8048f4e <phase_3+0x135>
  8048f3d:	e8 d4 03 00 00       	call   8049316 <explode_bomb>
  8048f42:	b8 77 00 00 00       	mov    $0x77,%eax
  8048f47:	eb 05                	jmp    8048f4e <phase_3+0x135>
- 8048f49:	b8 77 00 00 00       	mov    $0x77,%eax
- 8048f4e:	3a 45 ef             	cmp    -0x11(%ebp),%al
+ 8048f49:	b8 77 00 00 00       	mov    $0x77,%eax				; case 7 jumps here after
+ 8048f4e:	3a 45 ef             	cmp    -0x11(%ebp),%al ; jumps here
  8048f51:	74 05                	je     8048f58 <phase_3+0x13f>
  8048f53:	e8 be 03 00 00       	call   8049316 <explode_bomb>
  8048f58:	c9                   	leave  
