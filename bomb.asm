@@ -360,14 +360,14 @@ Disassembly of section .text:
  8048b50:	55                   	push   %ebp
  8048b51:	89 e5                	mov    %esp,%ebp
  8048b53:	83 ec 18             	sub    $0x18,%esp
- 8048b56:	89 5d f8             	mov    %ebx,-0x8(%ebp)
+ 8048b56:	89 5d f8             	mov    %ebx,-0x8(%ebp)		; stores ebx and esi before overwrting.
  8048b59:	89 75 fc             	mov    %esi,-0x4(%ebp)
- 8048b5c:	8b 5d 08             	mov    0x8(%ebp),%ebx
+ 8048b5c:	8b 5d 08             	mov    0x8(%ebp),%ebx		;ebx = number entered originally
  8048b5f:	b8 01 00 00 00       	mov    $0x1,%eax
- 8048b64:	83 fb 01             	cmp    $0x1,%ebx
+ 8048b64:	83 fb 01             	cmp    $0x1,%ebx			;ebx = 1st number entered
  8048b67:	7e 1a                	jle    8048b83 <func4+0x33>
- 8048b69:	8d 43 ff             	lea    -0x1(%ebx),%eax
- 8048b6c:	89 04 24             	mov    %eax,(%esp)
+ 8048b69:	8d 43 ff             	lea    -0x1(%ebx),%eax		;eax = ebx - 1
+ 8048b6c:	89 04 24             	mov    %eax,(%esp)			;pass eax to f()
  8048b6f:	e8 dc ff ff ff       	call   8048b50 <func4>		;ah a recursive f()
  8048b74:	89 c6                	mov    %eax,%esi
  8048b76:	83 eb 02             	sub    $0x2,%ebx
@@ -595,12 +595,12 @@ Disassembly of section .text:
  8048dd0:	55                   	push   %ebp
  8048dd1:	89 e5                	mov    %esp,%ebp
  8048dd3:	83 ec 28             	sub    $0x28,%esp				;ok max char length = 28
- 8048dd6:	8d 45 f4             	lea    -0xc(%ebp),%eax			;there is some string movement
- 8048dd9:	89 44 24 08          	mov    %eax,0x8(%esp)
- 8048ddd:	c7 44 24 04 b8 99 04 	movl   $0x80499b8,0x4(%esp)		;some string replacing
+ 8048dd6:	8d 45 f4             	lea    -0xc(%ebp),%eax			;
+ 8048dd9:	89 44 24 08          	mov    %eax,0x8(%esp)			;3rd argument to pass to sscanf = integer input
+ 8048ddd:	c7 44 24 04 b8 99 04 	movl   $0x80499b8,0x4(%esp)		;2st arg = format = "%d %c %d" maybe just %d
  8048de4:	08 
  8048de5:	8b 45 08             	mov    0x8(%ebp),%eax
- 8048de8:	89 04 24             	mov    %eax,(%esp)
+ 8048de8:	89 04 24             	mov    %eax,(%esp)				;1nd argument to pass to sscanf = text
  8048deb:	e8 98 f9 ff ff       	call   8048788 <__isoc99_sscanf@plt>
  8048df0:	83 f8 01             	cmp    $0x1,%eax
  8048df3:	75 06                	jne    8048dfb <phase_4+0x2b>		;so it only wants 1 argument from sscanf
@@ -608,9 +608,9 @@ Disassembly of section .text:
  8048df9:	7f 05                	jg     8048e00 <phase_4+0x30>
  8048dfb:	e8 16 05 00 00       	call   8049316 <explode_bomb>
  8048e00:	8b 45 f4             	mov    -0xc(%ebp),%eax
- 8048e03:	89 04 24             	mov    %eax,(%esp)
+ 8048e03:	89 04 24             	mov    %eax,(%esp)					;oh it passes the integer here to func4
  8048e06:	e8 45 fd ff ff       	call   8048b50 <func4>
- 8048e0b:	3d 3d 06 00 00       	cmp    $0x63d,%eax
+ 8048e0b:	3d 3d 06 00 00       	cmp    $0x63d,%eax					;0x63d = 1597
  8048e10:	74 05                	je     8048e17 <phase_4+0x47>
  8048e12:	e8 ff 04 00 00       	call   8049316 <explode_bomb>
  8048e17:	c9                   	leave  
