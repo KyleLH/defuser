@@ -566,19 +566,19 @@ Disassembly of section .text:
  8048d83:	83 f8 01             	cmp    $0x1,%eax
  8048d86:	7f 05                	jg     8048d8d <phase_5+0x33>
  8048d88:	e8 89 05 00 00       	call   8049316 <explode_bomb>
- 8048d8d:	8b 45 f4             	mov    -0xc(%ebp),%eax
- 8048d90:	83 e0 0f             	and    $0xf,%eax
- 8048d93:	89 45 f4             	mov    %eax,-0xc(%ebp)
- 8048d96:	83 f8 0f             	cmp    $0xf,%eax					; eax = pointer to input
- 8048d99:	74 29                	je     8048dc4 <phase_5+0x6a>
+ 8048d8d:	8b 45 f4             	mov    -0xc(%ebp),%eax				;eax = 1st number
+ 8048d90:	83 e0 0f             	and    $0xf,%eax					;get first 8 bits
+ 8048d93:	89 45 f4             	mov    %eax,-0xc(%ebp)				;overwrite 1st number with it's 1st 8 bits
+ 8048d96:	83 f8 0f             	cmp    $0xf,%eax					;{explode bomb
+ 8048d99:	74 29                	je     8048dc4 <phase_5+0x6a>		;if 1st number is 15}
  8048d9b:	b9 00 00 00 00       	mov    $0x0,%ecx
  8048da0:	ba 00 00 00 00       	mov    $0x0,%edx
- 8048da5:	bb e0 99 04 08       	mov    $0x80499e0,%ebx				; ebx = pointer to array = 2, 14, 7, 8, 12, 15, 11, 0, 4, 1, 13, 3, 9, 6, 5
- 8048daa:	83 c2 01             	add    $0x1,%edx
- 8048dad:	8b 04 83             	mov    (%ebx,%eax,4),%eax
- 8048db0:	01 c1                	add    %eax,%ecx
- 8048db2:	83 f8 0f             	cmp    $0xf,%eax
- 8048db5:	75 f3                	jne    8048daa <phase_5+0x50>
+ 8048da5:	bb e0 99 04 08       	mov    $0x80499e0,%ebx				;ebx = pointer to array = 2, 14, 7, 8, 12, 15, 11, 0, 4, 1, 13, 3, 9, 6, 5
+ 8048daa:	83 c2 01             	add    $0x1,%edx					;loop: edx = edx + 1 => edx is loop counter
+ 8048dad:	8b 04 83             	mov    (%ebx,%eax,4),%eax			;eax = *(eax * 4 + ebx)
+ 8048db0:	01 c1                	add    %eax,%ecx					;ecx = ecx + eax
+ 8048db2:	83 f8 0f             	cmp    $0xf,%eax					;if (eax != 15)
+ 8048db5:	75 f3                	jne    8048daa <phase_5+0x50>		;	goto loop;
  8048db7:	89 45 f4             	mov    %eax,-0xc(%ebp)
  8048dba:	83 fa 0b             	cmp    $0xb,%edx					;if (edx != 11) explode
  8048dbd:	75 05                	jne    8048dc4 <phase_5+0x6a>
