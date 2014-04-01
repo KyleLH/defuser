@@ -369,9 +369,9 @@ Disassembly of section .text:
  8048b69:	8d 43 ff             	lea    -0x1(%ebx),%eax		;eax = ebx - 1
  8048b6c:	89 04 24             	mov    %eax,(%esp)			;pass eax to f()
  8048b6f:	e8 dc ff ff ff       	call   8048b50 <func4>		;ah a recursive f()
- 8048b74:	89 c6                	mov    %eax,%esi
- 8048b76:	83 eb 02             	sub    $0x2,%ebx
- 8048b79:	89 1c 24             	mov    %ebx,(%esp)
+ 8048b74:	89 c6                	mov    %eax,%esi			;esi = eax
+ 8048b76:	83 eb 02             	sub    $0x2,%ebx			;ebx = ebx - 2
+ 8048b79:	89 1c 24             	mov    %ebx,(%esp)			;pass ebx
  8048b7c:	e8 cf ff ff ff       	call   8048b50 <func4>
  8048b81:	01 f0                	add    %esi,%eax
  8048b83:	8b 5d f8             	mov    -0x8(%ebp),%ebx
@@ -555,12 +555,12 @@ Disassembly of section .text:
  8048d5e:	53                   	push   %ebx
  8048d5f:	83 ec 20             	sub    $0x20,%esp
  8048d62:	8d 45 f0             	lea    -0x10(%ebp),%eax
- 8048d65:	89 44 24 0c          	mov    %eax,0xc(%esp)
- 8048d69:	8d 45 f4             	lea    -0xc(%ebp),%eax
- 8048d6c:	89 44 24 08          	mov    %eax,0x8(%esp)
- 8048d70:	c7 44 24 04 a1 9b 04 	movl   $0x8049ba1,0x4(%esp)
+ 8048d65:	89 44 24 0c          	mov    %eax,0xc(%esp)				; -0x10(ebp) = 4th arg
+ 8048d69:	8d 45 f4             	lea    -0xc(%ebp),%eax				;-0xc(%ebp) = 3nd arg
+ 8048d6c:	89 44 24 08          	mov    %eax,0x8(%esp)				;
+ 8048d70:	c7 44 24 04 a1 9b 04 	movl   $0x8049ba1,0x4(%esp)			; %d %d = 2nd arg
  8048d77:	08 
- 8048d78:	8b 45 08             	mov    0x8(%ebp),%eax
+ 8048d78:	8b 45 08             	mov    0x8(%ebp),%eax				; 0x8(%ebp) = 1st arg
  8048d7b:	89 04 24             	mov    %eax,(%esp)
  8048d7e:	e8 05 fa ff ff       	call   8048788 <__isoc99_sscanf@plt>
  8048d83:	83 f8 01             	cmp    $0x1,%eax
@@ -569,18 +569,18 @@ Disassembly of section .text:
  8048d8d:	8b 45 f4             	mov    -0xc(%ebp),%eax
  8048d90:	83 e0 0f             	and    $0xf,%eax
  8048d93:	89 45 f4             	mov    %eax,-0xc(%ebp)
- 8048d96:	83 f8 0f             	cmp    $0xf,%eax
+ 8048d96:	83 f8 0f             	cmp    $0xf,%eax					; eax = pointer to input
  8048d99:	74 29                	je     8048dc4 <phase_5+0x6a>
  8048d9b:	b9 00 00 00 00       	mov    $0x0,%ecx
  8048da0:	ba 00 00 00 00       	mov    $0x0,%edx
- 8048da5:	bb e0 99 04 08       	mov    $0x80499e0,%ebx
+ 8048da5:	bb e0 99 04 08       	mov    $0x80499e0,%ebx				; ebx = pointer to array = 2, 14, 7, 8, 12, 15, 11, 0, 4, 1, 13, 3, 9, 6, 5
  8048daa:	83 c2 01             	add    $0x1,%edx
  8048dad:	8b 04 83             	mov    (%ebx,%eax,4),%eax
  8048db0:	01 c1                	add    %eax,%ecx
  8048db2:	83 f8 0f             	cmp    $0xf,%eax
  8048db5:	75 f3                	jne    8048daa <phase_5+0x50>
  8048db7:	89 45 f4             	mov    %eax,-0xc(%ebp)
- 8048dba:	83 fa 0b             	cmp    $0xb,%edx
+ 8048dba:	83 fa 0b             	cmp    $0xb,%edx					;if (edx != 11) explode
  8048dbd:	75 05                	jne    8048dc4 <phase_5+0x6a>
  8048dbf:	3b 4d f0             	cmp    -0x10(%ebp),%ecx
  8048dc2:	74 05                	je     8048dc9 <phase_5+0x6f>
