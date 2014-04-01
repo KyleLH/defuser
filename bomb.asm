@@ -451,47 +451,47 @@ Disassembly of section .text:
  8048c49:	53                   	push   %ebx
  8048c4a:	83 ec 4c             	sub    $0x4c,%esp
  8048c4d:	8d 45 d0             	lea    -0x30(%ebp),%eax
- 8048c50:	89 44 24 04          	mov    %eax,0x4(%esp)
+ 8048c50:	89 44 24 04          	mov    %eax,0x4(%esp)				;2nd arg to read six num = pointer to array of saved 6 numbers
  8048c54:	8b 45 08             	mov    0x8(%ebp),%eax
- 8048c57:	89 04 24             	mov    %eax,(%esp)
+ 8048c57:	89 04 24             	mov    %eax,(%esp)					;1st arg to read six num = string entered
  8048c5a:	e8 f9 06 00 00       	call   8049358 <read_six_numbers>
- 8048c5f:	bf 00 00 00 00       	mov    $0x0,%edi
- 8048c64:	8d 75 d0             	lea    -0x30(%ebp),%esi
- 8048c67:	8b 04 be             	mov    (%esi,%edi,4),%eax
- 8048c6a:	83 e8 01             	sub    $0x1,%eax
- 8048c6d:	83 f8 05             	cmp    $0x5,%eax
- 8048c70:	76 05                	jbe    8048c77 <phase_6+0x33>
+ 8048c5f:	bf 00 00 00 00       	mov    $0x0,%edi					;edi = 0
+ 8048c64:	8d 75 d0             	lea    -0x30(%ebp),%esi				;esi = &n1
+ 8048c67:	8b 04 be             	mov    (%esi,%edi,4),%eax			;eax = *(eax+edi*4) = n1
+ 8048c6a:	83 e8 01             	sub    $0x1,%eax					;eax--
+ 8048c6d:	83 f8 05             	cmp    $0x5,%eax					;if (n1 >= 5)
+ 8048c70:	76 05                	jbe    8048c77 <phase_6+0x33>		; 	explode
  8048c72:	e8 9f 06 00 00       	call   8049316 <explode_bomb>
- 8048c77:	83 c7 01             	add    $0x1,%edi
- 8048c7a:	83 ff 06             	cmp    $0x6,%edi
- 8048c7d:	74 1a                	je     8048c99 <phase_6+0x55>
- 8048c7f:	89 fb                	mov    %edi,%ebx
- 8048c81:	8b 44 be fc          	mov    -0x4(%esi,%edi,4),%eax
- 8048c85:	3b 04 9e             	cmp    (%esi,%ebx,4),%eax
- 8048c88:	75 05                	jne    8048c8f <phase_6+0x4b>
- 8048c8a:	e8 87 06 00 00       	call   8049316 <explode_bomb>
+ 8048c77:	83 c7 01             	add    $0x1,%edi					;edi++
+ 8048c7a:	83 ff 06             	cmp    $0x6,%edi					;if (edi++ == 6)
+ 8048c7d:	74 1a                	je     8048c99 <phase_6+0x55>		; goto skip1
+ 8048c7f:	89 fb                	mov    %edi,%ebx					;ebx = counter = 0
+ 8048c81:	8b 44 be fc          	mov    -0x4(%esi,%edi,4),%eax		;eax = &n1+4*edi-4 ;1st line in while loop
+ 8048c85:	3b 04 9e             	cmp    (%esi,%ebx,4),%eax			;eax == esi+ebx*4
+ 8048c88:	75 05                	jne    8048c8f <phase_6+0x4b>		;if(ebx == edi)
+ 8048c8a:	e8 87 06 00 00       	call   8049316 <explode_bomb>		
  8048c8f:	83 c3 01             	add    $0x1,%ebx
  8048c92:	83 fb 05             	cmp    $0x5,%ebx
  8048c95:	7e ea                	jle    8048c81 <phase_6+0x3d>
  8048c97:	eb ce                	jmp    8048c67 <phase_6+0x23>
- 8048c99:	bb 00 00 00 00       	mov    $0x0,%ebx
+ 8048c99:	bb 00 00 00 00       	mov    $0x0,%ebx					;skip1 what 6 5 4 3 2 1 goes up to
  8048c9e:	8d 7d d0             	lea    -0x30(%ebp),%edi
- 8048ca1:	eb 16                	jmp    8048cb9 <phase_6+0x75>
- 8048ca3:	8b 52 08             	mov    0x8(%edx),%edx
+ 8048ca1:	eb 16                	jmp    8048cb9 <phase_6+0x75>		;goto skip2
+ 8048ca3:	8b 52 08             	mov    0x8(%edx),%edx				;loop3
  8048ca6:	83 c0 01             	add    $0x1,%eax
  8048ca9:	39 c8                	cmp    %ecx,%eax
- 8048cab:	75 f6                	jne    8048ca3 <phase_6+0x5f>
- 8048cad:	89 54 b5 b8          	mov    %edx,-0x48(%ebp,%esi,4)
+ 8048cab:	75 f6                	jne    8048ca3 <phase_6+0x5f>		;goto loop3
+ 8048cad:	89 54 b5 b8          	mov    %edx,-0x48(%ebp,%esi,4)		;loop4
  8048cb1:	83 c3 01             	add    $0x1,%ebx
  8048cb4:	83 fb 06             	cmp    $0x6,%ebx
- 8048cb7:	74 16                	je     8048ccf <phase_6+0x8b>
- 8048cb9:	89 de                	mov    %ebx,%esi
+ 8048cb7:	74 16                	je     8048ccf <phase_6+0x8b>		
+ 8048cb9:	89 de                	mov    %ebx,%esi					;skip2
  8048cbb:	8b 0c 9f             	mov    (%edi,%ebx,4),%ecx
  8048cbe:	b8 01 00 00 00       	mov    $0x1,%eax
- 8048cc3:	ba fc a5 04 08       	mov    $0x804a5fc,%edx
+ 8048cc3:	ba fc a5 04 08       	mov    $0x804a5fc,%edx				;edx = 346
  8048cc8:	83 f9 01             	cmp    $0x1,%ecx
- 8048ccb:	7f d6                	jg     8048ca3 <phase_6+0x5f>
- 8048ccd:	eb de                	jmp    8048cad <phase_6+0x69>
+ 8048ccb:	7f d6                	jg     8048ca3 <phase_6+0x5f>		;goto loop3
+ 8048ccd:	eb de                	jmp    8048cad <phase_6+0x69>		;goto loop4
  8048ccf:	8b 5d b8             	mov    -0x48(%ebp),%ebx
  8048cd2:	8b 45 bc             	mov    -0x44(%ebp),%eax
  8048cd5:	89 43 08             	mov    %eax,0x8(%ebx)
@@ -505,15 +505,15 @@ Disassembly of section .text:
  8048ced:	89 42 08             	mov    %eax,0x8(%edx)
  8048cf0:	c7 40 08 00 00 00 00 	movl   $0x0,0x8(%eax)
  8048cf7:	be 00 00 00 00       	mov    $0x0,%esi
- 8048cfc:	8b 43 08             	mov    0x8(%ebx),%eax
+ 8048cfc:	8b 43 08             	mov    0x8(%ebx),%eax				;loop5
  8048cff:	8b 13                	mov    (%ebx),%edx
  8048d01:	3b 10                	cmp    (%eax),%edx
- 8048d03:	7d 05                	jge    8048d0a <phase_6+0xc6>
+ 8048d03:	7d 05                	jge    8048d0a <phase_6+0xc6>		;skip bomb
  8048d05:	e8 0c 06 00 00       	call   8049316 <explode_bomb>
  8048d0a:	8b 5b 08             	mov    0x8(%ebx),%ebx
  8048d0d:	83 c6 01             	add    $0x1,%esi
  8048d10:	83 fe 05             	cmp    $0x5,%esi
- 8048d13:	75 e7                	jne    8048cfc <phase_6+0xb8>
+ 8048d13:	75 e7                	jne    8048cfc <phase_6+0xb8>		;goto loop5
  8048d15:	83 c4 4c             	add    $0x4c,%esp
  8048d18:	5b                   	pop    %ebx
  8048d19:	5e                   	pop    %esi
@@ -576,13 +576,13 @@ Disassembly of section .text:
  8048da5:	bb e0 99 04 08       	mov    $0x80499e0,%ebx				;ebx = pointer to array = 2, 14, 7, 8, 12, 15, 11, 0, 4, 1, 13, 3, 9, 6, 5
  8048daa:	83 c2 01             	add    $0x1,%edx					;loop: edx = edx + 1 => edx is loop counter
  8048dad:	8b 04 83             	mov    (%ebx,%eax,4),%eax			;eax = *(eax * 4 + ebx)
- 8048db0:	01 c1                	add    %eax,%ecx					;ecx = ecx + eax
+ 8048db0:	01 c1                	add    %eax,%ecx					;ecx = ecx + eax => ecx is summing what is in array
  8048db2:	83 f8 0f             	cmp    $0xf,%eax					;if (eax != 15)
  8048db5:	75 f3                	jne    8048daa <phase_5+0x50>		;	goto loop;
- 8048db7:	89 45 f4             	mov    %eax,-0xc(%ebp)
- 8048dba:	83 fa 0b             	cmp    $0xb,%edx					;if (edx != 11) explode
- 8048dbd:	75 05                	jne    8048dc4 <phase_5+0x6a>
- 8048dbf:	3b 4d f0             	cmp    -0x10(%ebp),%ecx
+ 8048db7:	89 45 f4             	mov    %eax,-0xc(%ebp)				;overwrite 1st number with eax which is 15
+ 8048dba:	83 fa 0b             	cmp    $0xb,%edx					;if (edx != 11) 
+ 8048dbd:	75 05                	jne    8048dc4 <phase_5+0x6a>		;	explode;
+ 8048dbf:	3b 4d f0             	cmp    -0x10(%ebp),%ecx				;ok so the 2nd number as the sum
  8048dc2:	74 05                	je     8048dc9 <phase_5+0x6f>
  8048dc4:	e8 4d 05 00 00       	call   8049316 <explode_bomb>
  8048dc9:	83 c4 20             	add    $0x20,%esp
